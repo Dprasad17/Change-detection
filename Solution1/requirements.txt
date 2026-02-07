@@ -1,0 +1,38 @@
+# =============================================================================
+# EtherX Innovations - Satellite Change Detection
+# Production Dependencies
+# =============================================================================
+
+# Core Framework
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+gunicorn>=23.0.0
+starlette>=0.41.0
+python-multipart>=0.0.12
+Jinja2>=3.1.4
+
+# AI/ML
+torch>=2.6.0
+numpy
+opencv-python-headless
+pillow
+scikit-image
+scipy
+albumentations
+
+# Geospatial
+rasterio
+geopandas
+pyproj
+shapely
+
+# Data Processing
+pandas
+
+# Validation & Security
+pydantic
+slowapi
+python-dotenv
+
+# Monitoring
+prometheus-client

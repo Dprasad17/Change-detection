@@ -1,0 +1,59 @@
+# Git
+.git/
+.gitignore
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+.Python
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+web_server.log
+server_output.log
+
+# Environment files (except example)
+.env
+.env.local
+.env.production
+
+# Test files
+tests/
+test_*.py
+*_test.py
+pytest.ini
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Documentation source
+docs/
+
+# OS files
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+
+# Development files
+*.md
+!README.md
+
+# Large model files (mount as volume instead)
+# Uncomment if you want to exclude model from Docker image
+# saved_model.pth

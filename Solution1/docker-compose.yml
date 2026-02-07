@@ -1,0 +1,97 @@
+# =============================================================================
+# EtherX Innovations - Docker Compose Configuration
+# Development & Production Setup
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # ==========================================================================
+  # Main Application Service
+  # ==========================================================================
+  etherx-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: etherx-satellite-detection
+    ports:
+      - "8006:8006"
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - MAX_FILE_SIZE_MB=${MAX_FILE_SIZE_MB:-500}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:8006,http://localhost}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LOG_FORMAT=${LOG_FORMAT:-json}
+      - RATE_LIMIT_REQUESTS=${RATE_LIMIT_REQUESTS:-100}
+      - RATE_LIMIT_WINDOW=${RATE_LIMIT_WINDOW:-60}
+    volumes:
+      - ./uploads:/app/uploads
+      - ./data:/app/data
+      - ./saved_model.pth:/app/saved_model.pth:ro
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8006/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 4G
+    networks:
+      - etherx-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ==========================================================================
+  # Nginx Reverse Proxy (Production)
+  # ==========================================================================
+  nginx:
+    image: nginx:alpine
+    container_name: etherx-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./static:/app/static:ro
+      # Uncomment for SSL:
+      # - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      etherx-app:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - etherx-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    profiles:
+      - production
+
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  etherx-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+# =============================================================================
+# Volumes (for persistent data)
+# =============================================================================
+volumes:
+  uploads:
+    driver: local
+  output:
+    driver: local

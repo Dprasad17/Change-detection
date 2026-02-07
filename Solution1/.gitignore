@@ -1,0 +1,99 @@
+# =============================================================================
+# EtherX Innovations - Git Ignore Configuration
+# =============================================================================
+
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Environment variables (keep examples)
+.env
+.env.local
+!.env.example
+!.env.production
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+*.sublime-workspace
+*.sublime-project
+
+# Logs
+*.log
+web_server.log
+server_output.log
+logs/
+
+# Uploads and outputs (runtime data)
+uploads/
+data/web_output/
+data/raw/
+
+# Model files (large - manage separately)
+*.pth
+!saved_model.pth.example
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# Test / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# mypy
+.mypy_cache/
+
+# SSL certificates (if stored locally)
+ssl/
+*.pem
+*.key
+*.crt
+
+# Backup files
+backup/
+*.backup
+
+# Docker (local overrides)
+docker-compose.override.yml

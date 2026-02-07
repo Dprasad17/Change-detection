@@ -1,0 +1,54 @@
+# =============================================================================
+# EtherX Innovations - Production Docker Compose Overrides
+# Use with: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+# =============================================================================
+
+version: '3.8'
+
+services:
+  etherx-app:
+    # Production-specific overrides
+    environment:
+      - ENVIRONMENT=production
+      - LOG_FORMAT=json
+      - LOG_LEVEL=INFO
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+        labels: "service,environment"
+        env: "ENVIRONMENT"
+
+  nginx:
+    # Always include nginx in production
+    profiles: []
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3

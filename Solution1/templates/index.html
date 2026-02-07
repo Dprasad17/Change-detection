@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- SEO Meta Tags -->
+    <title>EtherX Innovations | AI Satellite Change Detection</title>
+    <meta name="description"
+        content="Enterprise-grade AI-powered satellite imagery change detection using Siamese UNet deep learning. Detect environmental changes, urban development, and land use modifications.">
+    <meta name="keywords" content="satellite imagery, change detection, AI, deep learning, GIS, remote sensing, EtherX">
+    <meta name="author" content="EtherX Innovations">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="EtherX Innovations - AI Satellite Change Detection">
+    <meta property="og:description" content="Enterprise-grade AI-powered satellite imagery change detection platform.">
+    <meta property="og:site_name" content="EtherX Innovations">
+
+    <!-- Theme & Icons -->
+    <meta name="theme-color" content="#C5A021">
+    <meta name="msapplication-TileColor" content="#050505">
+
+    <!-- Preload & Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="/static/css/style.css" as="style">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+    <!-- Leaflet for GIS Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+
+<body>
+    <div class="video-background">
+        <video autoplay muted loop playsinline id="bg-video">
+            <source src="/static/img/bg_video.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <header>
+        <div class="container" style="display: flex; align-items: center; gap: 1rem;">
+            <div class="logo-container">
+                <img src="/static/img/etherx_logo.jpg" alt="EtherX Innovations Logo"
+                    style="height: 60px; display: block;">
+            </div>
+            <nav>
+                <a href="#" class="btn btn-primary" id="connect-gis-header">Connect GIS</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>AI-Powered Change Detection</h1>
+                <p>Industry-leading Siamese UNet architecture for sub-pixel change detection in multi-temporal satellite
+                    imagery.</p>
+                <div class="hero-actions">
+                    <a href="#analyze" class="btn btn-primary">Start Analysis</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="/static/img/hero.png" alt="Satellite Insight Dashboard">
+            </div>
+        </section>
+
+        <section id="analyze" class="app-section">
+            <div class="card">
+                <div class="wizard">
+                    <div class="wizard-step active" id="step-1">1</div>
+                    <div class="wizard-step" id="step-2">2</div>
+                    <div class="wizard-step" id="step-3">3</div>
+                </div>
+
+                <h2 style="margin-bottom: 2rem; font-size: 1.5rem; text-align: center;">Input Data Pairs</h2>
+                <div class="upload-grid">
+                    <div class="drop-zone" id="t1-drop">
+                        <span class="drop-icon">🛰️</span>
+                        <p class="drop-title">T1: Before Image</p>
+                        <p class="drop-subtitle">Drag & drop your satellite imagery</p>
+                        <span class="drop-formats">.zip or .tif supported</span>
+                        <input type="file" id="t1-input" hidden accept=".zip,.tif,.tiff">
+                        <div class="file-name" id="t1-filename" style="display: none;"></div>
+                    </div>
+                    <div class="drop-zone" id="t2-drop">
+                        <span class="drop-icon">🌍</span>
+                        <p class="drop-title">T2: After Image</p>
+                        <p class="drop-subtitle">Drag & drop your satellite imagery</p>
+                        <span class="drop-formats">.zip or .tif supported</span>
+                        <input type="file" id="t2-input" hidden accept=".zip,.tif,.tiff">
+                        <div class="file-name" id="t2-filename" style="display: none;"></div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn btn-primary" id="analyze-btn">Execute AI Pipeline</button>
+
+                    <!-- Enhanced Process Status Section -->
+                    <div id="process-status" class="process-status-container" style="display: none;">
+                        <!-- Progress Bar -->
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progress-bar"></div>
+                        </div>
+
+                        <!-- Current Step Display -->
+                        <div class="current-step-display">
+                            <div class="step-icon-large" id="current-step-icon">📤</div>
+                            <div class="step-info">
+                                <h3 class="step-title" id="current-step-title">Uploading Files</h3>
+                                <p class="step-description" id="current-step-description">Sending satellite imagery to
+                                    the server...</p>
+                            </div>
+                        </div>
+
+                        <!-- Step Timeline -->
+                        <div class="step-timeline">
+                            <div class="timeline-step" id="timeline-1" data-step="1">
+                                <div class="timeline-dot"></div>
+                                <span>Upload</span>
+                            </div>
+                            <div class="timeline-connector"></div>
+                            <div class="timeline-step" id="timeline-2" data-step="2">
+                                <div class="timeline-dot"></div>
+                                <span>Preprocess</span>
+                            </div>
+                            <div class="timeline-connector"></div>
+                            <div class="timeline-step" id="timeline-3" data-step="3">
+                                <div class="timeline-dot"></div>
+                                <span>AI Analysis</span>
+                            </div>
+                            <div class="timeline-connector"></div>
+                            <div class="timeline-step" id="timeline-4" data-step="4">
+                                <div class="timeline-dot"></div>
+                                <span>Export</span>
+                            </div>
+                        </div>
+
+                        <!-- Animated Loader -->
+                        <div class="loader-container">
+                            <div class="loader" id="main-loader"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="results-container" id="results">
+            <div class="card">
+                <h2 style="margin-bottom: 1rem;">Analysis Results (GIS Viewer)</h2>
+                <p style="color: var(--text-dim); margin-bottom: 1.5rem; font-size: 0.9rem;">Interactive layer control
+                    for Before, After, and Change Detection Mask.</p>
+                <div id="map"
+                    style="height: 600px; margin-bottom: 2rem; border-radius: 20px; border: 1px solid var(--border);">
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                    <a id="download-mask" class="btn btn-primary" style="text-align: center;">Download Mask</a>
+                    <button class="btn" id="connect-gis-btn"
+                        style="border: 1px solid var(--border); text-align: center; color: var(--text-main); background: transparent;">Connect
+                        QGIS</button>
+                    <a href="#" class="btn"
+                        style="border: 1px solid var(--border); text-align: center; color: var(--text-main); background: transparent;">Export
+                        Data</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="gis-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Connect to QGIS</h2>
+            <div class="modal-instructions">
+                <p class="modal-label">Recommended Method:</p>
+                <p class="modal-text">
+                    1. Download the <strong>QGIS Project File</strong> below.<br>
+                    2. Open QGIS and drag the file onto the canvas.<br>
+                    3. Your T1, T2, and Change Mask will load automatically.
+                </p>
+            </div>
+            <a id="qgis-project-link" class="btn btn-primary modal-btn">Download QGIS Project (.qgs)</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 EtherX Innovations. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+
+</html>
