@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: etherx-satellite-detection
+    env: docker
+    plan: free
+    branch: main
+    rootDir: Solution1
+    envVars:
+      - key: PORT
+        value: 8006
+      - key: ENVIRONMENT
+        value: production
+      - key: MAX_FILE_SIZE_MB
+        value: 500
