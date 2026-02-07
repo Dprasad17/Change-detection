@@ -43,8 +43,8 @@ data/web_output/
 data/raw/
 
 # Model files (large - manage separately)
-*.pth
-!saved_model.pth.example
+# *.pth
+# !saved_model.pth.example
 
 # OS files
 .DS_Store
